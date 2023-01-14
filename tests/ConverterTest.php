@@ -28,6 +28,16 @@ final class ConverterTest extends TestCase
             $numeral);
     }
 
+    /**
+    * @dataProvider validLargeNumerals
+    */
+    public function testValidLargeNumerals(int $number, string $numeral) : void
+    {
+        $this->assertEquals(
+            Converter::run($number),
+            $numeral);
+    }
+
     public function validSingleNumeralDataProvider() : array
     {
         return [
@@ -43,6 +53,15 @@ final class ConverterTest extends TestCase
             [2,  'II'],
             [4,  'IV'],
             [14, 'XIV'],
+        ];
+    }
+
+    public function validLargeNumerals() : array
+    {
+        return [
+            [2023,  'MMXXIII'],
+            [9001,  'MMMMMMMMMI'],
+            [1861 , 'MDCCCLXI'],
         ];
     }
 }
