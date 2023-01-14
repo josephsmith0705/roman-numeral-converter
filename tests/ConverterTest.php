@@ -8,10 +8,41 @@ require 'include/classes/Converter.php';
 
 final class ConverterTest extends TestCase
 {
-    public function testValidNumeral(): void
+    /**
+    * @dataProvider validSingleNumeralDataProvider
+    */
+    public function testValidSingleNumerals(int $number, string $numeral) : void
     {
         $this->assertEquals(
-            Converter::run(1),
-            'I');
+            Converter::run($number),
+            $numeral);
+    }
+
+    /**
+    * @dataProvider validMultiNumeralDataProvider
+    */
+    public function testValidMultiNumerals(int $number, string $numeral) : void
+    {
+        $this->assertEquals(
+            Converter::run($number),
+            $numeral);
+    }
+
+    public function validSingleNumeralDataProvider() : array
+    {
+        return [
+            [1,  'I'],
+            [5,  'V'],
+            [10, 'X'],
+        ];
+    }
+
+    public function validMultiNumeralDataProvider() : array
+    {
+        return [
+            [2,  'II'],
+            [4,  'IV'],
+            [14, 'XIV'],
+        ];
     }
 }
