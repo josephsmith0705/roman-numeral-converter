@@ -6,20 +6,20 @@ final class Converter
     public static function run(int $number) : string
     {
         $initialNumber = $number;
-        $numeral       = '';
+        $numeral       = [];
 
         while($number != 0)
         {
             $nearestNumeral = Converter::fetchNearestNumeral($number);
 
-            $numeral = $number < 0 
-                ? $nearestNumeral['numeral'] . $numeral
-                : $numeral . $nearestNumeral['numeral'];
+            $position = $number > 0 ? count($numeral) : -1;
+
+            array_splice($numeral, $position, 0, $nearestNumeral['numeral']);
 
             $number  = $nearestNumeral['difference'];
         }
 
-        return $numeral;
+        return implode($numeral);
     }
 
     private static function fetchNumerals() : array
@@ -37,21 +37,25 @@ final class Converter
 
     private static function fetchNearestNumeral($queryNumber) : array
     {
-        $queryNumber = abs($queryNumber);
+        $absNumber      = abs($queryNumber);
         $numerals       = Converter::fetchNumerals();
         $nearestNumeral = null;
 
         foreach($numerals as $number => $numeral)
         {
-            if($nearestNumeral == null || abs($queryNumber - $nearestNumeral) > abs($number - $queryNumber))
+            if($nearestNumeral == null || abs($absNumber - $nearestNumeral) > abs($number - $absNumber))
             {
                 $nearestNumeral = $number;
             }
         }
 
+        $difference = ($queryNumber > 0) 
+            ? $queryNumber - $nearestNumeral 
+            : $queryNumber + $nearestNumeral;
+
         return [
             'numeral'    => $numerals[$nearestNumeral],
-            'difference' => $queryNumber - $nearestNumeral
+            'difference' => $difference
         ];
     }
 }
