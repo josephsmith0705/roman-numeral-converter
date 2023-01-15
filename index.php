@@ -1,13 +1,14 @@
 <?php 
 
-if(!empty($_POST))
-{
-    print_r($_POST);
-}
-
 $title = 'Roman Numeral Converter';
 
 require_once 'include/header.php';
+require_once 'include/classes/Converter.php';
+
+if(!empty($_POST) && $_POST['number'])
+{
+    echo(Converter::run($_POST['number']));
+}
 
 ?>
 
@@ -15,7 +16,7 @@ require_once 'include/header.php';
         <form action="" method="POST">
             <div class="row">
                 <div class="col-sm-3 offset-sm-4">
-                    <input class="form-control" type="text" name="numeral" />
+                    <input class="form-control" type="text" name="number" />
                 </div>
                 <button class="btn btn-outline-primary col-sm-1" type="submit">Submit</button>
             </div>
