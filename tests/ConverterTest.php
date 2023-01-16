@@ -9,9 +9,9 @@ require 'include/classes/Converter.php';
 final class ConverterTest extends TestCase
 {
     /**
-    * @dataProvider validSingleNumeralDataProvider
+    * @dataProvider singleNumeralDataProvider
     */
-    public function testValidSingleNumerals(int $number, string $numeral) : void
+    public function testSingleNumerals(int $number, string $numeral) : void
     {
         $this->assertEquals(
             Converter::run($number),
@@ -19,9 +19,9 @@ final class ConverterTest extends TestCase
     }
 
     /**
-    * @dataProvider validMultiNumeralDataProvider
+    * @dataProvider multiNumeralDataProvider
     */
-    public function testValidMultiNumerals(int $number, string $numeral) : void
+    public function testMultiNumerals(int $number, string $numeral) : void
     {
         $this->assertEquals(
             Converter::run($number),
@@ -29,39 +29,45 @@ final class ConverterTest extends TestCase
     }
 
     /**
-    * @dataProvider validLargeNumerals
+    * @dataProvider largeNumeralDataProvider
     */
-    public function testValidLargeNumerals(int $number, string $numeral) : void
+    public function testLargeNumerals(int $number, string $numeral) : void
     {
         $this->assertEquals(
             Converter::run($number),
             $numeral);
     }
 
-    public function validSingleNumeralDataProvider() : array
+    private function singleNumeralDataProvider() : array
     {
         return [
-            [1,  'I'],
-            [5,  'V'],
-            [10, 'X'],
+            [1,   'I'],
+            [5,   'V'],
+            [10,  'X'],
+            [50,  'L'],
+            [100, 'C']
         ];
     }
 
-    public function validMultiNumeralDataProvider() : array
+    private function multiNumeralDataProvider() : array
     {
         return [
             [2,  'II'],
             [4,  'IV'],
+            [7,  'VII'],
             [14, 'XIV'],
+            [20, 'XX']
         ];
     }
 
-    public function validLargeNumerals() : array
+    private function largeNumeralDataProvider() : array
     {
         return [
-            [2023,  'MMXXIII'],
-            [9001,  'MMMMMMMMMI'],
-            [1861 , 'MDCCCLXI'],
+            [623,  'DCXXIII'],
+            [999,  'CMXCIX'],
+            [1861, 'MDCCCLXI'],
+            [2023, 'MMXXIII'],
+            [9001, 'MMMMMMMMMI']
         ];
     }
 }

@@ -5,21 +5,54 @@ final class Converter
 {
     public static function run(int $number) : string
     {
-        $initialNumber = $number;
-        $numeral       = [];
+        $roughNumeral = Converter::getRoughNumeral($number);
+        
+        $numeral = Converter::cleanNumeral($roughNumeral);
 
+        return implode($numeral);
+    }
+
+    //return the numeral BEFORE checking if over 3 of the same numerals are repeated
+    private static function getRoughNumeral(int $number) : array
+    {
         while($number != 0)
         {
             $nearestNumeral = Converter::fetchNearestNumeral($number);
 
-            $position = $number > 0 ? count($numeral) : -1;
-
-            array_splice($numeral, $position, 0, $nearestNumeral['numeral']);
+            $numeral[] = $nearestNumeral['numeral'];
 
             $number  = $nearestNumeral['difference'];
         }
 
-        return implode($numeral);
+        return $numeral;
+    }
+
+    private static function cleanNumeral(array $numeral) : array
+    {
+        foreach($numeral AS $numeralKey => $numeralCharacter)
+        {
+            $currentCharacter = $numeralCharacter;
+            $characterCount = 0;
+
+            foreach($numeral as $character)
+            {
+                if($character == $currentCharacter)
+                {
+                    $characterCount++;
+                }
+                else
+                {
+                    $characterCount = 0;
+                }
+            }
+
+            if($characterCount > 3)
+            {
+                $numeral[$numeralKey] = 1; 
+            }
+        }
+
+        return $numeral;
     }
 
     private static function fetchNumerals() : array
@@ -37,25 +70,18 @@ final class Converter
 
     private static function fetchNearestNumeral($queryNumber) : array
     {
-        $absNumber      = abs($queryNumber);
-        $numerals       = Converter::fetchNumerals();
-        $nearestNumeral = null;
-
-        foreach($numerals as $number => $numeral)
+        foreach(Converter::fetchNumerals() as $number => $numeral)
         {
-            if($nearestNumeral == null || abs($absNumber - $nearestNumeral) > abs($number - $absNumber))
+            if($queryNumber >= $number)
             {
-                $nearestNumeral = $number;
+                $nearestNumeralInt    = $number;
+                $nearestNumeralString = $numeral;
             }
         }
 
-        $difference = ($queryNumber > 0) 
-            ? $queryNumber - $nearestNumeral 
-            : $queryNumber + $nearestNumeral;
-
         return [
-            'numeral'    => $numerals[$nearestNumeral],
-            'difference' => $difference
+            'numeral'    => $nearestNumeralString,
+            'difference' => $queryNumber - $nearestNumeralInt
         ];
     }
 }
