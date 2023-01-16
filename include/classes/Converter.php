@@ -5,83 +5,48 @@ final class Converter
 {
     public static function run(int $number) : string
     {
-        $roughNumeral = Converter::getRoughNumeral($number);
-        
-        $numeral = Converter::cleanNumeral($roughNumeral);
+        $numeral = '';
 
-        return implode($numeral);
-    }
-
-    //return the numeral BEFORE checking if over 3 of the same numerals are repeated
-    private static function getRoughNumeral(int $number) : array
-    {
-        while($number != 0)
+        while ($number > 0) 
         {
-            $nearestNumeral = Converter::fetchNearestNumeral($number);
-
-            $numeral[] = $nearestNumeral['numeral'];
-
-            $number  = $nearestNumeral['difference'];
+            $nearestNumeral = static::fetchNearestNumeral($number);
+            
+            $numeral .= $nearestNumeral['numeral'];
+            $number  -= $nearestNumeral['number'];
         }
-
         return $numeral;
     }
 
-    private static function cleanNumeral(array $numeral) : array
+    private static function fetchNearestNumeral(int $queryNumber) : array
     {
-        foreach($numeral AS $numeralKey => $numeralCharacter)
+        foreach (static::fetchNumerals() as $numeral => $number) 
         {
-            $currentCharacter = $numeralCharacter;
-            $characterCount = 0;
-
-            foreach($numeral as $character)
+            if($queryNumber >= $number) 
             {
-                if($character == $currentCharacter)
-                {
-                    $characterCount++;
-                }
-                else
-                {
-                    $characterCount = 0;
-                }
-            }
-
-            if($characterCount > 3)
-            {
-                $numeral[$numeralKey] = 1; 
+                return [
+                    'numeral' => $numeral,
+                    'number'  => $number
+                ];
             }
         }
-
-        return $numeral;
     }
 
     private static function fetchNumerals() : array
     {
         return [
-            1 => 'I',
-            5 => 'V',
-            10 => 'X',
-            50 => 'L',
-            100 => 'C',
-            500 => 'D',
-            1000 => 'M'
-        ];
-    }
-
-    private static function fetchNearestNumeral($queryNumber) : array
-    {
-        foreach(Converter::fetchNumerals() as $number => $numeral)
-        {
-            if($queryNumber >= $number)
-            {
-                $nearestNumeralInt    = $number;
-                $nearestNumeralString = $numeral;
-            }
-        }
-
-        return [
-            'numeral'    => $nearestNumeralString,
-            'difference' => $queryNumber - $nearestNumeralInt
+            'M' => 1000, 
+            'CM' => 900, 
+            'D' => 500, 
+            'CD' => 400, 
+            'C' => 100, 
+            'XC' => 90, 
+            'L' => 50, 
+            'XL' => 40, 
+            'X' => 10, 
+            'IX' => 9, 
+            'V' => 5, 
+            'IV' => 4, 
+            'I' => 1
         ];
     }
 }

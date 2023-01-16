@@ -5,21 +5,22 @@ $title = 'Roman Numeral Converter';
 require_once 'include/header.php';
 require_once 'include/classes/Converter.php';
 
-if(!empty($_POST) && $_POST['number'])
-{
-    echo(Converter::run($_POST['number']));
-}
-
 ?>
 
-    <h1 class="text-center"><?php echo $title; ?></h1>
+    <h1 class="text-center mt-5"><?php echo $title; ?></h1>
         <form action="" method="POST">
-            <div class="row">
-                <div class="col-sm-3 offset-sm-4">
+            <div class="row mt-4">
+                <div class="col-md-3 offset-md-4">
                     <input class="form-control" type="text" name="number" />
                 </div>
-                <button class="btn btn-outline-primary col-sm-1" type="submit">Submit</button>
+                <button class="btn btn-outline-primary col-md-1" type="submit">Submit</button>
             </div>
+
+            <?php if(!empty($_POST) && $_POST['number'])
+            {
+                echo '<p class="text-center mt-4">' . Converter::run($_POST['number']) . '</p>';
+            }
+            ?>
         </form>
 
 <?php 

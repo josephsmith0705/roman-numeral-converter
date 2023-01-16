@@ -18,18 +18,6 @@ final class UnitTest extends TestCase
     }
 
     /**
-    * @dataProvider getRoughNumeralDataProvider
-    */
-    public function testGetRoughNumeral(int $number, array $roughNumeral) : void
-    {
-        $getRoughNumeral = $this->getMethod('getRoughNumeral');
-        
-        $this->assertEquals(
-            $getRoughNumeral->invokeArgs(null, [$number]),
-            $roughNumeral);
-    }
-
-    /**
     * @dataProvider fetchNearestNumeralDataProvider
     */
     public function testFetchNearestNumeral(int $number, array $numeralDifference) : void
@@ -41,67 +29,33 @@ final class UnitTest extends TestCase
             $numeralDifference);
     }
 
-    /**
-    * @dataProvider cleanNumeralDataProvider
-    */
-    public function testCleanNumeral(array $roughNumeral, array $cleanedNumeral) : void
-    {
-        $cleanNumeral = $this->getMethod('cleanNumeral');
-
-        $this->assertEquals(
-            $cleanNumeral->invokeArgs(null, [$roughNumeral]),
-            $cleanedNumeral);
-    }
-
-    private function getRoughNumeralDataProvider() : array
-    {
-        return [
-            [2,  ['I', 'I']],
-            [4,  ['I', 'I', 'I', 'I']],
-            [5,  ['V']],
-            [9,  ['V', 'I', 'I', 'I', 'I']],
-            [13, ['X', 'I', 'I', 'I']]
-        ];
-    }
-
     private function fetchNearestNumeralDataProvider() : array
     {
         return [
             [2, [
                 'numeral' => 'I',
-                'difference' => 1]
+                'number'  => 1]
             ],
 
             [4, [
-                'numeral' => 'I',
-                'difference' => 3]
+                'numeral' => 'IV',
+                'number'  => 4]
             ],
 
             [5, [
                 'numeral' => 'V',
-                'difference' => 0]
+                'number'  => 5]
             ],
 
             [7, [
                 'numeral' => 'V',
-                'difference' => 2]
+                'number'  => 5]
             ],
 
             [10, [
                 'numeral' => 'X',
-                'difference' => 0]
+                'number'  => 10]
             ],
-        ];
-    }
-
-    private function cleanNumeralDataProvider() : array
-    {
-        return [
-            [['I', 'I', 'I', 'I'],           ['I', 'V']],
-            [['X', 'I', 'I', 'I', 'I'],      ['X', 'I', 'V']],
-            [['X', 'V', 'I', 'I', 'I', 'I'], ['X', 'V', 'I', 'V']],
-            [['I', 'I', 'I'],                ['I', 'I', 'I']],
-            [['V', 'I', 'I', 'I'],           ['V', 'I', 'I', 'I']],
         ];
     }
 }
